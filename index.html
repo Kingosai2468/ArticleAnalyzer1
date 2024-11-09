@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .keywords, .suggestions {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Article Analyzer</h1>
+<p>Paste your article text below, and click "Analyze" to get keywords and optimization suggestions.</p>
+<textarea id="articleText" placeholder="Paste your article here..."></textarea>
+<br>
+<button onclick="analyzeArticle()">Analyze</button>
+
+<div class="results">
+    <h2>Analysis Results:</h2>
+    <div class="keywords">
+        <h3>Top Keywords:</h3>
+        <ul id="keywordList"></ul>
+    </div>
+    <div class="suggestions">
+        <h3>Optimization Suggestion:</h3>
+        <p id="suggestionText"></p>
+    </div>
+</div>
+
+<script>
+function analyzeArticle() {
+    const articleText = document.getElementById("articleText").value;
+    if (!articleText) {
+        alert("Please paste an article to analyze.");
+        return;
+    }
+
+    // Split text into words
+    const words = articleText.toLowerCase().match(/\b\w+\b/g);
+    if (!words) {
+        alert("No words found in the article.");
+        return;
+    }
+
+    // Count word frequency
+    const wordFrequency = {};
+    words.forEach(word => {
+        if (wordFrequency[word]) {
+            wordFrequency[word]++;
+        } else {
+            wordFrequency[word] = 1;
+        }
+    });
+
+    // Sort words by frequency
+    const sortedWords = Object.keys(wordFrequency).sort((a, b) => wordFrequency[b] - wordFrequency[a]);
+
+    // Display top keywords
+    const keywordList = document.getElementById("keywordList");
+    keywordList.innerHTML = "";
+    sortedWords.slice(0, 10).forEach(word => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${word}: ${wordFrequency[word]} times`;
+        keywordList.appendChild(listItem);
+    });
+
+    // Generate optimization suggestion
+    const topKeyword = sortedWords[0];
+    const suggestionText = document.getElementById("suggestionText");
+    suggestionText.textContent = `To improve ranking, consider expanding on topics related to "${topKeyword}" and naturally including other relevant keywords from your article.`;
+}
+</script>
+
+</body>
+</html>
